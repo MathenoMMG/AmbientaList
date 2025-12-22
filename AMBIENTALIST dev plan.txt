@@ -1,0 +1,120 @@
+Este documento constituye el Plan Maestro de Desarrollo para AMBIENTALIST. Está diseñado para ser procesado por herramientas de desarrollo o compartido con colaboradores, siguiendo principios de Clean Architecture y desarrollo ágil.
+
+PLAN  DE DESARROLLO: AMBIENTALIST
+1. RESUMEN DEL PROYECTO
+Aplicación web diseñada para centralizar, analizar y auditar el cumplimiento ambiental de empresas mediante Inteligencia Artificial Multimodal. El sistema permite la ingesta de documentos complejos (PDFs con tablas, imágenes de instalaciones y reportes técnicos) y los contrasta contra una base de datos normativa actualizada.
+
+2. STACK TECNOLÓGICO SELECCIONADO
+Frontend: Next.js 15+ (App Router) con Tailwind CSS y componentes de Shadcn/UI.
+
+Backend: FastAPI (Python 3.11+) para el motor de IA y procesamiento de datos.
+
+Base de Datos Relacional: PostgreSQL (vía Supabase) para gestión de usuarios y metadatos.
+
+Base de Datos Vectorial: pgvector (integrado en Supabase) para el sistema de memoria RAG.
+
+Autenticación y Storage: Supabase Auth y Supabase Storage (compatible con S3).
+
+Orquestación de IA: LiteLLM para abstracción de modelos y LangChain para flujos de trabajo.
+
+Infraestructura: Vercel (Frontend) y Google Cloud Run (Backend).
+
+3. PRINCIPIOS DE ESCALABILIDAD
+Independencia del Modelo: El código no llamará directamente a APIs de terceros. Se utilizará una capa de servicio que permita intercambiar entre Gemini, Claude o modelos locales mediante variables de entorno.
+
+Procesamiento Multimodal: No se extraerá texto plano. Se utilizarán modelos de visión para convertir páginas de PDF en datos estructurados (Markdown), preservando tablas y descripciones de imágenes.
+
+Arquitectura RAG (Retrieval-Augmented Generation): Las leyes no se entrenan; se recuperan dinámicamente según el contexto del usuario para garantizar veracidad legal y bajo costo.
+
+4. ETAPA 1: MVP - BASE GRATUITA Y FUNCIONAL
+El objetivo es validar la lógica de auditoría con costo operativo cero o mínimo.
+
+FLUJO DE USUARIO DETALLADO (MVP):
+1. Acceso y Onboarding
+   - Landing page simple -> Login (Supabase Auth: Email/Google).
+   - Selección/Creación de Organización.
+2. Configuración del Marco Legal
+   - Sección "Biblioteca Normativa".
+   - Carga de PDFs de leyes o selección de pre-cargadas.
+   - Confirmación de procesamiento (Embedding).
+3. Ingesta de Evidencia (Auditoría)
+   - Sección "Nueva Auditoría".
+   - Drag & Drop de archivos (Facturas, fotos, informes).
+   - Clasificación automática (e.g., "1 Factura, 2 Fotos").
+4. Espera Activa
+   - Feedback visual (Barra de progreso / "Analizando...").
+   - Procesamiento en segundo plano con notificaciones.
+5. Revisión del Diagnóstico
+   - Vista Dual: Documento (Izq) vs Reporte IA (Der).
+   - Semáforo Interactivo: Rojo (Infracción -> ver artículo), Amarillo (Recomendación).
+   - Chat Contextual: Consultas sobre el análisis.
+6. Cierre
+   - Exportación PDF.
+   - Guardado en Dashboard (Histórico).
+
+Objetivo 1: Entorno y Autenticación
+   - Configurar proyecto en Next.js y FastAPI.
+   - Implementar Supabase Auth con protección de rutas.
+   - Sistema de "Organizaciones" (Multi-tenancy).
+
+Objetivo 2: Ingesta de Documentos y Visión
+   - Módulo de carga (Supabase Storage).
+   - Clasificación y procesamiento con Vision API.
+   - Manejo de errores ("Golden Rule": Si falla, pedir feedback al usuario).
+
+Objetivo 3: Memoria Normativa (RAG)
+   - Carga y vectorización de leyes (pgvector).
+   - Búsqueda semántica.
+
+Objetivo 4: Interfaz de Auditoría
+   - Dashboard con semáforo.
+   - Vista detallada `/auditoria/[id]` con chat.
+
+RUTAS DEL PROYECTO (NEXT.JS):
+- /login: Autenticación.
+- /dashboard: Vista general y semáforo global.
+- /normativas: Gestión de leyes.
+- /auditoria/nueva: Carga de archivos.
+- /auditoria/[id]: Detalle, visor PDF y chat.
+
+5. ETAPA 2: ESCALADO PREMIUM Y PRODUCCIÓN
+El objetivo es aumentar la precisión, la seguridad y la capacidad de análisis profundo.
+
+Objetivo 5: Migración a Modelos de Alta Capacidad
+
+Activar Claude 3.5 Sonnet o Claude 4.5 mediante LiteLLM para análisis finales de alta precisión.
+
+Implementar un sistema de "costeo por uso" para monitorear el gasto de tokens por organización.
+
+Objetivo 6: Integración de Fuentes Externas
+
+Habilitar la conexión con carpetas de Google Drive mediante OAuth2.
+
+Sincronización automática de archivos: cualquier cambio en Drive se refleja en el análisis de la App.
+
+Objetivo 7: Auditoría Multimodal Avanzada
+
+Mejorar la detección de anomalías en fotos (ej: identificar falta de señalética o mal manejo de residuos en imágenes reales).
+
+Implementar el "Chat de Consulta Normativa" con memoria de conversación.
+
+Objetivo 8: Generación de Reportes Ejecutivos
+
+Crear el motor de exportación de reportes en PDF profesional con gráficos de cumplimiento.
+
+Implementar sistema de alertas y notificaciones automáticas ante cambios en leyes gubernamentales.
+
+6. FLUJO LÓGICO DE INTEGRACIÓN DEL CÓDIGO
+El usuario sube un PDF complejo a la web.
+
+El Backend lo convierte en imágenes y le pide a la IA (vía Vision API) que extraiga todo el contenido en formato Markdown.
+
+El sistema busca en la base de datos vectorial las leyes que tengan relación con el contenido extraído.
+
+Se envía a Claude/Gemini el contenido del usuario + las leyes encontradas.
+
+La IA responde un diagnóstico estructurado.
+
+El Frontend de Next.js recibe el diagnóstico y actualiza el Dashboard en tiempo real.
+
+El resultado queda guardado en la base de datos PostgreSQL para futuras consultas de otros miembros de la misma empresa.
