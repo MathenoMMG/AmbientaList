@@ -16,3 +16,8 @@ Thumbs.db
 # IDE
 .vscode/
 .idea/
+
+# Technical documentation
+AMBIENTALIST dev plan.txt
+GEMINI.md
+AGENTS.md
