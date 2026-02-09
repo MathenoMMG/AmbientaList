@@ -1,5 +1,30 @@
-fastapi
-uvicorn
-pydantic
-python-dotenv
-httpx
+# Core FastAPI
+fastapi>=0.115.0
+uvicorn[standard]>=0.34.0
+pydantic>=2.10.0
+pydantic-settings>=2.6.0
+python-dotenv>=1.0.0
+
+# Database & Storage
+supabase>=2.3.0
+psycopg2-binary>=2.9.9
+asyncpg>=0.29.0
+
+# AI & LLM
+litellm>=1.60.0
+langchain>=0.3.0
+langchain-community>=0.3.0
+openai>=1.32.0
+
+# PDF Processing & Vision
+PyPDF2>=3.0.0
+pdf2image>=1.17.0
+Pillow>=11.0.0
+
+# Vector Embeddings
+sentence-transformers>=3.3.0
+
+# Utilities
+httpx>=0.28.0
+python-multipart>=0.0.20
+aiofiles>=24.1.0

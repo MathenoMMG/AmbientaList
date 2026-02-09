@@ -1,0 +1,17 @@
+# Minimal requirements for quick MVP start
+# Install core packages first, add AI/ML packages later when needed
+
+# Core FastAPI
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+pydantic==2.10.6
+pydantic-settings==2.7.1
+python-dotenv==1.0.1
+
+# Database & Storage (minimal)
+supabase==2.16.0
+psycopg2-binary==2.9.11
+
+# Utilities
+httpx==0.28.1
+python-multipart==0.0.20
