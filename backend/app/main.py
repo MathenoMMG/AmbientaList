@@ -34,9 +34,9 @@ def health_check():
     return {"status": "healthy", "environment": settings.environment}
 
 
-# Include routers (to be added)
-# from app.routers import auth, organizations, audits, regulations
-# app.include_router(auth.router, prefix="/api/auth", tags=["Authentication"])
-# app.include_router(organizations.router, prefix="/api/organizations", tags=["Organizations"])
-# app.include_router(audits.router, prefix="/api/audits", tags=["Audits"])
-# app.include_router(regulations.router, prefix="/api/regulations", tags=["Regulations"])
+# Include routers
+from app.routers import organizations, invitations
+
+app.include_router(organizations.router, prefix="/api/organizations", tags=["Organizations"])
+app.include_router(invitations.router, prefix="/api/invitations", tags=["Invitations"])
+

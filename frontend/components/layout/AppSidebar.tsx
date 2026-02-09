@@ -12,7 +12,8 @@ import {
   ChevronRight,
   CalendarDays,
   LogOut,
-  Building2
+  Building2,
+  Settings
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { createClient } from "@/lib/supabase/client"
@@ -57,6 +58,15 @@ export function AppSidebar({ user }: AppSidebarProps) {
 
   const switchOrganization = () => {
     router.push('/organizations')
+  }
+
+  const openSettings = () => {
+    const orgId = localStorage.getItem('selectedOrganization')
+    if (orgId) {
+      router.push(`/organizations/${orgId}/settings`)
+    } else {
+      toast.error('No organization selected')
+    }
   }
 
   return (
@@ -123,6 +133,10 @@ export function AppSidebar({ user }: AppSidebarProps) {
             <DropdownMenuItem onClick={switchOrganization}>
               <Building2 className="mr-2 h-4 w-4" />
               <span>Switch Organization</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={openSettings}>
+              <Settings className="mr-2 h-4 w-4" />
+              <span>Organization Settings</span>
             </DropdownMenuItem>
             <DropdownMenuItem onClick={handleSignOut}>
               <LogOut className="mr-2 h-4 w-4" />

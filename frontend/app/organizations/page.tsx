@@ -43,7 +43,14 @@ export default function OrganizationSelector() {
     const loadOrganizations = async () => {
         try {
             const { data: { user } } = await supabase.auth.getUser()
-            if (!user) return
+            if (!user) {
+                console.log('No authenticated user found')
+                setOrganizations([])
+                setIsLoading(false)
+                return
+            }
+
+            console.log('Loading organizations for user ID:', user.id)
 
             // Get organizations where user is a member
             const { data, error } = await supabase
@@ -59,13 +66,23 @@ export default function OrganizationSelector() {
         `)
                 .eq('user_id', user.id)
 
-            if (error) throw error
+            if (error) {
+                console.error('Supabase error:', error)
+                toast.error(`Failed to load organizations: ${error.message}`)
+                setOrganizations([])
+                setIsLoading(false)
+                return
+            }
+
+            console.log('Raw data from Supabase:', data)
 
             const orgs = data?.map(item => item.organizations).filter(Boolean) as Organization[]
+            console.log('Processed organizations:', orgs)
             setOrganizations(orgs || [])
-        } catch (error) {
-            console.error('Error loading organizations:', error)
-            toast.error('Failed to load organizations')
+        } catch (error: any) {
+            console.error('Unexpected error loading organizations:', error)
+            toast.error('An unexpected error occurred while loading organizations')
+            setOrganizations([])
         } finally {
             setIsLoading(false)
         }
